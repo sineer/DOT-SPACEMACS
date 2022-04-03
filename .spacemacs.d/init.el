@@ -228,6 +228,16 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
+                         alect-black
+                         ample-zen
+                         alect-black
+                         ir-black
+                         junio
+                         lush
+                         manoj-dark
+                         reverse
+                         soothe
+                         wheatgrass
                          organic-green
                          solarized-dark
                          tango-dark
@@ -236,6 +246,7 @@ values."
                          solarized-light
                          leuven
                          zenburn)
+
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
 
