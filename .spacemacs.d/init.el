@@ -507,7 +507,7 @@ layers configuration. You are free to put any user code."
 
 
 
-  ;; XXX equake + stumpwm + eaf + NANO ...
+  ;; XXX equake + stumpwm + eaf ...
 
   (delete-selection-mode 1)
 
