@@ -127,13 +127,8 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(
-                                      deadgrep
+   dotspacemacs-additional-packages '(deadgrep
                                       inf-clojure
-                                      cyberpunk-theme
-                                      color-theme-sanityinc-tomorrow
-                                      distinguished-theme
-                                      dracula-theme
                                       mu4e-maildirs-extension
                                       org-dashboard
                                       org-journal
@@ -227,10 +222,10 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         alect-black
+   dotspacemacs-themes '(alect-black
                          ample-zen
                          alect-black
+                         cyberpunk
                          ir-black
                          junio
                          lush
@@ -238,6 +233,7 @@ values."
                          reverse
                          soothe
                          wheatgrass
+                         spacemacs-dark
                          organic-green
                          solarized-dark
                          tango-dark
@@ -413,11 +409,36 @@ user code here.  The exception is org related code, which should be placed in
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
+  (global-company-mode)
+
   ;; NO LOCK FILE
   (setq create-lockfiles nil)
 
   ;; Do not save .~undo-tree~
   (setq undo-tree-auto-save-history nil)
+
+
+  ;; SCROLLING
+  ;; move minimum when cursor exits view, instead of recentering
+  (setq scroll-conservatively 101)
+
+  (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
+
+  ;; (spacemacs/enable-smooth-scrolling)
+  ;; (use-package smooth-scroll
+  ;;   :config
+  ;;   (smooth-scroll-mode 1)
+  ;;   (setq smooth-scroll/vscroll-step-size 5))
+
+  (setq mouse-wheel-progressive-speed nil)
+  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+
+  (scroll-bar-mode)
+
+  (pixel-scroll-precision-mode)
+  (setq pixel-scroll-precision-large-scroll-height 40.0)
+  (setq pixel-scroll-precision-interpolation-factor 30)
+
 
   ;; TRANSPARENCY
   (spacemacs/enable-transparency)
@@ -555,25 +576,6 @@ layers configuration. You are free to put any user code."
 
   ;; PARINFER
   ;; (parinfer/init-parinfer)
-
-  ;; SCROLLING
-  ;; move minimum when cursor exits view, instead of recentering
-  (setq scroll-conservatively 101)
-
-  (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
-
-  ;; (spacemacs/enable-smooth-scrolling)
-  ;; (use-package smooth-scroll
-  ;;   :config
-  ;;   (smooth-scroll-mode 1)
-  ;;   (setq smooth-scroll/vscroll-step-size 5))
-
-  (setq mouse-wheel-progressive-speed nil)
-  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-
-  (scroll-bar-mode)
-
-  (global-company-mode)
 
   ;;  (global-diff-hl-mode)
 
