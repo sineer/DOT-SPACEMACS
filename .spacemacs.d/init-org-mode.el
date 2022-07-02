@@ -30,10 +30,13 @@
 ;; org-journal
 (setq org-agenda-files (quote ("~/j/.jj/")))
 (setq org-agenda-files-regex "\\`[^.].*\\.org'\\|[0-9]+")
+
 (setq org-journal-dir "~/j/.jj"
       org-journal-file-format "%Y%m%d.org")
+
 (evil-leader/set-key
   "jj" 'org-journal-new-entry)
+
 (evil-leader/set-key-for-mode 'org-journal-mode
   "mn" 'org-journal-open-next-entry
   "mp" 'org-journal-open-previous-entry)

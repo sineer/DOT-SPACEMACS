@@ -6,6 +6,10 @@
 (require 'esh-module) ; require modules
 (add-to-list 'eshell-modules-list 'eshell-tramp)
 
-(require 'equake)
 
-(advice-add #'save-buffers-kill-terminal :before-while #'equake-kill-emacs-advice)
+(add-to-list 'load-path
+             "~/g/emacs/equake/")
+
+(require 'equake)
+(advice-add #'save-buffers-kill-terminal
+            :before-while #'equake-kill-emacs-advice)

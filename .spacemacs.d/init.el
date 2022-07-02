@@ -1,5 +1,5 @@
 ;; -*- mode: emacs-lisp -*-
-;; J's Spacemacs .emacs init
+;; sineer's Spacemacs config
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -40,6 +40,7 @@ values."
                       auto-completion-complete-with-key-sequence nil
                       auto-completion-complete-with-key-sequence-delay 0.1
                       auto-completion-private-snippets-directory nil)
+     better-defaults
      (c-c++ :variables
             c-c++-backend 'lsp-ccls
             c-c++-adopt-subprojects t
@@ -54,15 +55,17 @@ values."
      erc
      ;; (erlfeed :variables rmh-elfeed-org-files (list "~/XXX/feed.org" "XXX"))
      erlang
-     elixir
-     fzf
-     hugo
+     (elixir :variables elixir-backend 'lsp)
      finance
+     fzf
+     graphql
      git
      helpful
      helm
+     hugo
      html
      javascript
+     json
      latex
      (lsp :variables
           lsp-idle-delay                    0.5
@@ -93,7 +96,7 @@ values."
           elixir-backend 'lsp)
      markdown
      (mu4e :variables
-           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.6.10/share/emacs/site-lisp/mu/mu4e/")
+           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.6.11/share/emacs/site-lisp/mu/mu4e/")
      multiple-cursors
      neotree
      (org :variables
@@ -113,25 +116,32 @@ values."
      python
      (ranger :variables ranger-show-preview t)
      (rust :variables rust-backend 'lsp)
-     shell
-     ;; spell-checking
-     ;; spotify
-     ;; syntax-checking
-     (version-control :variables version-control-global-margin t)
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
+     spell-checking
+     syntax-checking
+     themes-megapack
      treemacs
+     (typescript :variables
+                 typescript-linter   'eslint
+                 typescript-fmt-tool 'prettier
+                 typescript-backend  'lsp)
+     (version-control :variables version-control-global-margin t)
      w3m
      yaml
      zig)
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
-   ;; packages then consider to create a layer, you can also put the
+   ;l packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(deadgrep
                                       inf-clojure
                                       mu4e-maildirs-extension
                                       org-dashboard
                                       org-journal
+                                      org-modern
                                       rustic)
 
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -224,7 +234,6 @@ values."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(alect-black
                          ample-zen
-                         alect-black
                          cyberpunk
                          ir-black
                          junio
@@ -246,6 +255,7 @@ values."
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
 
+   ;; XXX
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font
@@ -420,9 +430,7 @@ layers configuration. You are free to put any user code."
 
   ;; SCROLLING
   ;; move minimum when cursor exits view, instead of recentering
-  (setq scroll-conservatively 101)
-
-  (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
+  ;; (setq scroll-conservatively 101)
 
   ;; (spacemacs/enable-smooth-scrolling)
   ;; (use-package smooth-scroll
@@ -430,11 +438,14 @@ layers configuration. You are free to put any user code."
   ;;   (smooth-scroll-mode 1)
   ;;   (setq smooth-scroll/vscroll-step-size 5))
 
+  ;; (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
+
   (setq mouse-wheel-progressive-speed nil)
   (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 
   (scroll-bar-mode)
 
+  ;; EMACS-29 BUILT-IN pixel-scroll-precision-mode ROCKS.
   (pixel-scroll-precision-mode)
   (setq pixel-scroll-precision-large-scroll-height 40.0)
   (setq pixel-scroll-precision-interpolation-factor 30)
@@ -444,7 +455,7 @@ layers configuration. You are free to put any user code."
   (spacemacs/enable-transparency)
   (add-hook 'after-make-frame-functions 'spacemacs/enable-transparency)
 
-  ;; NO "SMART" PARENS!
+  ;; NO "SMART" PARENS PLEASE
   (spacemacs/toggle-smartparens-globally-off)
 
   ;; C-STYLE
@@ -465,14 +476,22 @@ layers configuration. You are free to put any user code."
 
   (setq-default c-default-style "jbsd")
 
+  (add-to-list 'load-path
+               "~/g/emacs/equake/")
+  (require 'equake)
+  (advice-add #'save-buffers-kill-terminal
+              :before-while #'equake-kill-emacs-advice)
 
-  ;; Homebrew MU 1.6.10 install path
-  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.6.10/share/emacs/site-lisp/mu/mu4e")
+
+  (add-to-list 'load-path "~/.spacemacs.d/")
+
+  ;; Homebrew MU 1.6.11 install path
+  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.6.11/share/emacs/site-lisp/mu/mu4e")
 
   (setq ledger-post-amount-alignment-column 68)
   (add-to-list 'auto-mode-alist '("\\.lgr$" . ledger-mode))
 
-  (add-to-list 'load-path "~/.spacemacs.d/")
+
   (load-library "init-keys")
   (load-library "init-mail")
   (load-library "init-org-mode")
@@ -494,7 +513,7 @@ layers configuration. You are free to put any user code."
     :hook
     (elixir-mode . lsp)
     :init
-    (add-to-list 'exec-path "~/g/elixir-ls"))
+    (add-to-list 'exec-path "~/g/ex/elixir-ls/release"))
 
   ;; RUSTic
   (use-package rustic
@@ -526,9 +545,10 @@ layers configuration. You are free to put any user code."
     (when buffer-file-name
       (setq-local buffer-save-without-query t)))
 
+  (add-hook 'org-mode-hook #'org-modern-mode)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
-
-  ;; XXX equake + stumpwm + eaf ...
+  ;; XXX equake
 
   (delete-selection-mode 1)
 
@@ -571,14 +591,16 @@ layers configuration. You are free to put any user code."
      (save-excursion (move-end-of-line 1) (point)))
     (delete-char 1))
 
-  ;; Break dired mode ???
+  ;; XXX Break dired mode ???
 ;;;  (add-hook 'dired-mode-hook 'deer)
 
-  ;; PARINFER
+  ;; XXX PARINFER
   ;; (parinfer/init-parinfer)
 
+  ;; XXX ???
   ;;  (global-diff-hl-mode)
 
+  ;; XXX Obsolete ???
   (defun cider-figwheel-repl ()
     (interactive)
     (save-some-buffers)
@@ -591,6 +613,7 @@ layers configuration. You are free to put any user code."
 
   (global-set-key (kbd "C-c C-f") #'cider-figwheel-repl)
 
+
   ;;; SPACELINE
   (spaceline-toggle-minor-modes-off)
   (spaceline-toggle-buffer-size-off)
@@ -601,7 +624,9 @@ layers configuration. You are free to put any user code."
               (setq-local revert-buffer-function
                           (lambda (&rest args)))))
 
-  ;;(setq insert-directory-program "/usr/local/opt/coreutils/libexec/gnubin/ls")
+
+
+  (load-library "init-equake")
   )
 
 
@@ -658,18 +683,18 @@ This function is called at the very end of Spacemacs initialization."
  '(erc-nickserv-alist
    '((Ars nil nil "Census" "IDENTIFY" nil nil nil)
      (Austnet "NickOP!service@austnet.org" "/msg\\s-NickOP@austnet.org\\s-identify\\s-<password>" "nickop@austnet.org" "identify" nil nil nil)
-     (Azzurra "NickServ!service@azzurra.org" "/ns\\s-IDENTIFY\\s-password" "NickServ" "IDENTIFY" nil nil nil)
+     (Azzurra "NickServ!service@azzurra.org" "\2/ns\\s-IDENTIFY\\s-password\2" "NickServ" "IDENTIFY" nil nil nil)
      (BitlBee nil nil "&bitlbee" "identify" nil nil nil)
-     (BRASnet "NickServ!services@brasnet.org" "/NickServ\\s-IDENTIFY\\s-senha" "NickServ" "IDENTIFY" nil "" nil)
+     (BRASnet "NickServ!services@brasnet.org" "\2/NickServ\\s-IDENTIFY\\s-\37senha\37\2" "NickServ" "IDENTIFY" nil "" nil)
      (DALnet "NickServ!service@dal.net" "/msg\\s-NickServ@services.dal.net\\s-IDENTIFY\\s-<password>" "NickServ@services.dal.net" "IDENTIFY" nil nil nil)
-     (freenode "Nickserv's nick!user@host: NickServ!NickServ@services." "/msg\\s-NickServ\\s-identify\\s-<password>" "NickServ" "identify" nil nil "You are now identified for \\S-+\\.")
+     (freenode "Nickserv's nick!user@host: NickServ!NickServ@services." "\2/msg\\s-NickServ\\s-identify\\s-<password>\2" "NickServ" "identify" nil nil "You are now identified for \2\\S-+\2\\.")
      (GalaxyNet "NS!nickserv@galaxynet.org" "Please\\s-change\\s-nicks\\s-or\\s-authenticate." "NS@services.galaxynet.org" "AUTH" t nil nil)
      (GRnet "NickServ!service@irc.gr" "This\\s-nickname\\s-is\\s-registered\\s-and\\s-protected." "NickServ" "IDENTIFY" nil nil "Password\\s-accepted\\s--\\s-you\\s-are\\s-now\\s-recognized.")
      (iip "Trent@anon.iip" "type\\s-/squery\\s-Trent\\s-identify\\s-<password>" "Trent@anon.iip" "IDENTIFY" nil "SQUERY" nil)
-     (OFTC "NickServ!services@services.oftc.net" nil "NickServ" "IDENTIFY" nil nil "You\\s-are\\s-successfully\\s-identified\\s-as\\s-")
+     (OFTC "NickServ!services@services.oftc.net" nil "NickServ" "IDENTIFY" nil nil "You\\s-are\\s-successfully\\s-identified\\s-as\\s-\2")
      (Rizon "NickServ!service@rizon.net" "This\\s-nickname\\s-is\\s-registered\\s-and\\s-protected." "NickServ" "IDENTIFY" nil nil "Password\\s-accepted\\s--\\s-you\\s-are\\s-now\\s-recognized.")
      (QuakeNet nil nil "Q@CServe.quakenet.org" "auth" t nil nil)
-     (SlashNET "NickServ!services@services.slashnet.org" "/msg\\s-NickServ\\s-IDENTIFY\\s-password" "NickServ@services.slashnet.org" "IDENTIFY" nil nil nil)))
+     (SlashNET "NickServ!services@services.slashnet.org" "/msg\\s-NickServ\\s-IDENTIFY\\s-\37password" "NickServ@services.slashnet.org" "IDENTIFY" nil nil nil)))
  '(evil-want-Y-yank-to-eol t)
  '(fci-rule-color "gray80" t)
  '(global-display-line-numbers-mode t)
@@ -686,7 +711,7 @@ This function is called at the very end of Spacemacs initialization."
  '(menu-bar-mode nil)
  '(org-src-block-faces '(("emacs-lisp" (:background "#F0FFF0"))))
  '(package-selected-packages
-   '(helm-rtags google-c-style gendoxy flycheck-ycmd flycheck-rtags disaster dap-mode bui cpp-auto-include company-ycmd ycmd request-deferred company-rtags rtags company-c-headers ccls powerline org-mime parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f dash hydra s highlight sesman spinner pkg-info epl bind-map bind-key packed helm avy helm-core async popup yaml-mode xterm-color web-mode web-beautify tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder ranger pug-mode prodigy pbcopy parinfer osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro org-journal org-download org-dashboard multi-term ht alert log4e gntp mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode ledger-mode launchctl js2-refactor js2-mode js-doc htmlize helm-w3m w3m helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex auto-complete organic-green-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu erlang elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))
+   '(tide typescript-mode powerline org-mime parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f dash hydra s highlight sesman spinner pkg-info epl bind-map bind-key packed helm avy helm-core async popup yaml-mode xterm-color web-mode web-beautify tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder ranger pug-mode prodigy pbcopy parinfer osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro org-journal org-download org-dashboard multi-term ht alert log4e gntp mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode ledger-mode launchctl js2-refactor js2-mode js-doc htmlize helm-w3m w3m helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex auto-complete organic-green-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu erlang elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))
  '(paradox-github-token t)
  '(safe-local-variable-values
    '((cider-ns-refresh-after-fn . "development/go")
@@ -702,5 +727,6 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 180 :width normal)))))
+ '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 180 :width normal))))
+ '(highlight-parentheses-highlight ((nil (:weight ultra-bold))) t))
 )

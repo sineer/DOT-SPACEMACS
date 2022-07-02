@@ -1,5 +1,5 @@
 
-(setq mu4e-mu-binary "/usr/local/bin/mu")
+(setq mu4e-mu-binary "/opt/homebrew/bin/mu")
 
 
 (setq message-send-mail-function 'message-send-mail-with-sendmail)
