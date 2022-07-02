@@ -126,7 +126,9 @@ values."
      (typescript :variables
                  typescript-linter   'eslint
                  typescript-fmt-tool 'prettier
-                 typescript-backend  'lsp)
+                 typescript-backend  'lsp
+                 typescript-indent-level 2
+                 web-mode-code-indent-offset 2)
      (version-control :variables version-control-global-margin t)
      w3m
      yaml
@@ -475,6 +477,7 @@ layers configuration. You are free to put any user code."
                   (inextern-lang . 0))))
 
   (setq-default c-default-style "jbsd")
+
 
   (add-to-list 'load-path
                "~/g/emacs/equake/")
