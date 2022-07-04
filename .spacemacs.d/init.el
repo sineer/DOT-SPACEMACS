@@ -64,7 +64,10 @@ values."
      helm
      hugo
      html
-     javascript
+     (javascript :variables
+                 javascript-backend    'lsp
+                 javascript-fmt-tool   'prettier
+                 javascript-lsp-linter nil)
      json
      latex
      (lsp :variables
@@ -570,15 +573,23 @@ layers configuration. You are free to put any user code."
 
   (use-package flycheck :ensure)
 
+  (defun middle-click (click)
+    (interactive "e")
+    (let ((event (event-start click))
+          (prefix-arg current-prefix-arg))
+      (call-interactively (key-binding (vector (list 'mouse-2 event)) t))))
+
+  (global-set-key (kbd "<S-mouse-3>") 'middle-click)
 
   ;;(setq mac-emulate-three-button-mouse t)
 
-  ;; (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
-  ;; (eval-after-load "flyspell"
-  ;;  '(progn
-  ;;     (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
-  ;;     (define-key flyspell-mouse-map [mouse-3] #'undefined))
-  ;;(define-key key-translation-map (kbd "<s-mouse-1>") (kbd "<mouse-2>"))
+  (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
+  (eval-after-load "flyspell"
+   '(progn
+      (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
+      (define-key flyspell-mouse-map [mouse-3] #'undefined)))
+
+  (define-key key-translation-map (kbd "<S-mouse-3>") (kbd "<mouse-2>"))
 
 
   ;; https://www.dr-qubit.org/Evil_cursor_model.html
