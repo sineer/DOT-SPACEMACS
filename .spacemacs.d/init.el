@@ -65,23 +65,28 @@ values."
      hugo
      html
      (javascript :variables
-                 javascript-backend    'lsp
-                 javascript-fmt-tool   'prettier
-                 javascript-lsp-linter nil)
+                 javascript-backend       'lsp
+                 javascript-fmt-tool      'prettier
+                 javascript-lsp-linter    nil
+                 javascript-repl          'nodejs
+                 javascript-import-tool   'import-js
+                 node-add-modules-path    t
+                 js2-include-node-externs t)
+
      json
      latex
      (lsp :variables
-          lsp-idle-delay                    0.5
-          lsp-enable-indentation            nil
-          lsp-enable-links                  t
-          lsp-enable-folding                t
-          lsp-enable-on-type-formatting     t
-          lsp-enable-imenu                  t
-          lsp-ui-imenu-auto-refresh         t
-          lsp-ui-sideline-delay             0.05
-          lsp-ui-doc-header                 t
-          lsp-ui-doc-include-signature      t
-          lsp-ui-doc-position               'at-point
+          lsp-idle-delay                   0.5
+          lsp-enable-indentation           nil
+          lsp-enable-links                 t
+          lsp-enable-folding               t
+          lsp-enable-on-type-formatting    t
+          lsp-enable-imenu                 t
+          lsp-ui-imenu-auto-refresh        t
+          lsp-ui-sideline-delay            0.05
+          lsp-ui-doc-header                t
+          lsp-ui-doc-include-signature     t
+          lsp-ui-doc-position              'at-point
           lsp-ui-doc-alignment             'frame
           lsp-ui-doc-max-width              150
           lsp-ui-doc-max-height             13
@@ -89,14 +94,14 @@ values."
           lsp-ui-peek-show-directory        t
           lsp-ui-peek-peek-height           20
           lsp-ui-peek-list-width            50
-          ;; lsp-ui-doc-border                "orange"
+          ;; lsp-ui-doc-border              "orange"
           lsp-ui-doc-border                 (face-foreground 'default)
           lsp-ui-sideline-show-code-actions t
           ;;lsp-ui-imenu-refresh-delay      100
           ;;lsp-ui-imenu-window-width       128
           lsp-rust-server                   'rust-analyzer
-          cargo-process-reload-on-modify t
-          elixir-backend 'lsp)
+          cargo-process-reload-on-modify    t
+          elixir-backend                    'lsp)
      markdown
      (mu4e :variables
            mu4e-installation-path "/opt/homebrew/Cellar/mu/1.6.11/share/emacs/site-lisp/mu/mu4e/")
@@ -424,8 +429,6 @@ user code here.  The exception is org related code, which should be placed in
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
-  (global-company-mode)
-
   ;; NO LOCK FILE
   (setq create-lockfiles nil)
 
@@ -445,23 +448,29 @@ layers configuration. You are free to put any user code."
 
   ;; (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
 
-  (setq mouse-wheel-progressive-speed nil)
-  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-
-  (scroll-bar-mode)
-
   ;; EMACS-29 BUILT-IN pixel-scroll-precision-mode ROCKS.
   (pixel-scroll-precision-mode)
   (setq pixel-scroll-precision-large-scroll-height 40.0)
   (setq pixel-scroll-precision-interpolation-factor 30)
 
 
+  (setq mouse-wheel-progressive-speed nil)
+  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+
+
+  (scroll-bar-mode)
+
+  (global-company-mode)
+
+
   ;; TRANSPARENCY
   (spacemacs/enable-transparency)
   (add-hook 'after-make-frame-functions 'spacemacs/enable-transparency)
 
+
   ;; NO "SMART" PARENS PLEASE
   (spacemacs/toggle-smartparens-globally-off)
+
 
   ;; C-STYLE
   (c-add-style "jbsd"
@@ -482,17 +491,10 @@ layers configuration. You are free to put any user code."
   (setq-default c-default-style "jbsd")
 
 
-  (add-to-list 'load-path
-               "~/g/emacs/equake/")
-  (require 'equake)
-  (advice-add #'save-buffers-kill-terminal
-              :before-while #'equake-kill-emacs-advice)
-
-
   (add-to-list 'load-path "~/.spacemacs.d/")
 
-  ;; Homebrew MU 1.6.11 install path
-  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.6.11/share/emacs/site-lisp/mu/mu4e")
+  ;; Homebrew MU 1.8.8 install path
+  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.8.8/share/emacs/site-lisp/mu/mu4e")
 
   (setq ledger-post-amount-alignment-column 68)
   (add-to-list 'auto-mode-alist '("\\.lgr$" . ledger-mode))
@@ -554,7 +556,6 @@ layers configuration. You are free to put any user code."
   (add-hook 'org-mode-hook #'org-modern-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
-  ;; XXX equake
 
   (delete-selection-mode 1)
 
@@ -571,7 +572,7 @@ layers configuration. You are free to put any user code."
   (setq clojure-enable-fancify-symbols t)
 
 
-  (use-package flycheck :ensure)
+  ;;(setq mac-emulate-three-button-mouse t)
 
   (defun middle-click (click)
     (interactive "e")
@@ -581,8 +582,8 @@ layers configuration. You are free to put any user code."
 
   (global-set-key (kbd "<S-mouse-3>") 'middle-click)
 
-  ;;(setq mac-emulate-three-button-mouse t)
 
+  (use-package flycheck :ensure)
   (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
   (eval-after-load "flyspell"
    '(progn
@@ -590,6 +591,11 @@ layers configuration. You are free to put any user code."
       (define-key flyspell-mouse-map [mouse-3] #'undefined)))
 
   (define-key key-translation-map (kbd "<S-mouse-3>") (kbd "<mouse-2>"))
+
+  (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc))
+  ;;(add-hook 'c++-mode-hook
+  ;;          (lambda ()
+  ;;            (flyspell-prog-mode)))
 
 
   ;; https://www.dr-qubit.org/Evil_cursor_model.html
@@ -632,6 +638,7 @@ layers configuration. You are free to put any user code."
   (spaceline-toggle-minor-modes-off)
   (spaceline-toggle-buffer-size-off)
 
+  ;; XXX Still req ???
   ;; BufferList cursor reset fix (https://github.com/syl20bnr/spacemacs/issues/2667)
   (add-hook 'Buffer-menu-mode-hook
             (lambda ()
@@ -695,20 +702,7 @@ This function is called at the very end of Spacemacs initialization."
  '(column-number-mode t)
  '(erc-nick "sineer")
  '(erc-nickserv-alist
-   '((Ars nil nil "Census" "IDENTIFY" nil nil nil)
-     (Austnet "NickOP!service@austnet.org" "/msg\\s-NickOP@austnet.org\\s-identify\\s-<password>" "nickop@austnet.org" "identify" nil nil nil)
-     (Azzurra "NickServ!service@azzurra.org" "\2/ns\\s-IDENTIFY\\s-password\2" "NickServ" "IDENTIFY" nil nil nil)
-     (BitlBee nil nil "&bitlbee" "identify" nil nil nil)
-     (BRASnet "NickServ!services@brasnet.org" "\2/NickServ\\s-IDENTIFY\\s-\37senha\37\2" "NickServ" "IDENTIFY" nil "" nil)
-     (DALnet "NickServ!service@dal.net" "/msg\\s-NickServ@services.dal.net\\s-IDENTIFY\\s-<password>" "NickServ@services.dal.net" "IDENTIFY" nil nil nil)
-     (freenode "Nickserv's nick!user@host: NickServ!NickServ@services." "\2/msg\\s-NickServ\\s-identify\\s-<password>\2" "NickServ" "identify" nil nil "You are now identified for \2\\S-+\2\\.")
-     (GalaxyNet "NS!nickserv@galaxynet.org" "Please\\s-change\\s-nicks\\s-or\\s-authenticate." "NS@services.galaxynet.org" "AUTH" t nil nil)
-     (GRnet "NickServ!service@irc.gr" "This\\s-nickname\\s-is\\s-registered\\s-and\\s-protected." "NickServ" "IDENTIFY" nil nil "Password\\s-accepted\\s--\\s-you\\s-are\\s-now\\s-recognized.")
-     (iip "Trent@anon.iip" "type\\s-/squery\\s-Trent\\s-identify\\s-<password>" "Trent@anon.iip" "IDENTIFY" nil "SQUERY" nil)
-     (OFTC "NickServ!services@services.oftc.net" nil "NickServ" "IDENTIFY" nil nil "You\\s-are\\s-successfully\\s-identified\\s-as\\s-\2")
-     (Rizon "NickServ!service@rizon.net" "This\\s-nickname\\s-is\\s-registered\\s-and\\s-protected." "NickServ" "IDENTIFY" nil nil "Password\\s-accepted\\s--\\s-you\\s-are\\s-now\\s-recognized.")
-     (QuakeNet nil nil "Q@CServe.quakenet.org" "auth" t nil nil)
-     (SlashNET "NickServ!services@services.slashnet.org" "/msg\\s-NickServ\\s-IDENTIFY\\s-\37password" "NickServ@services.slashnet.org" "IDENTIFY" nil nil nil)))
+   '((freenode "Nickserv's nick!user@host: NickServ!NickServ@services." "\2/msg\\s-NickServ\\s-identify\\s-<password>\2" "NickServ" "identify" nil nil "You are now identified for \2\\S-+\2\\.")))
  '(evil-want-Y-yank-to-eol t)
  '(fci-rule-color "gray80" t)
  '(global-display-line-numbers-mode t)
@@ -725,7 +719,7 @@ This function is called at the very end of Spacemacs initialization."
  '(menu-bar-mode nil)
  '(org-src-block-faces '(("emacs-lisp" (:background "#F0FFF0"))))
  '(package-selected-packages
-   '(tide typescript-mode powerline org-mime parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f dash hydra s highlight sesman spinner pkg-info epl bind-map bind-key packed helm avy helm-core async popup yaml-mode xterm-color web-mode web-beautify tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder ranger pug-mode prodigy pbcopy parinfer osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro org-journal org-download org-dashboard multi-term ht alert log4e gntp mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode ledger-mode launchctl js2-refactor js2-mode js-doc htmlize helm-w3m w3m helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex auto-complete organic-green-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu erlang elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))
+   '(add-node-modules-path powerline org-mime parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f dash hydra s highlight sesman spinner pkg-info epl bind-map bind-key packed helm avy helm-core async popup yaml-mode xterm-color web-mode web-beautify tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder ranger pug-mode prodigy pbcopy parinfer osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro org-journal org-download org-dashboard multi-term ht alert log4e gntp mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode ledger-mode launchctl js2-refactor js2-mode js-doc htmlize helm-w3m w3m helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex auto-complete organic-green-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu erlang elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))
  '(paradox-github-token t)
  '(safe-local-variable-values
    '((cider-ns-refresh-after-fn . "development/go")
