@@ -43,7 +43,7 @@
 
 
 ;;; ORG-ROAM
-(setq org-roam-directory (file-truename "~/j/.0RG"))
+(setq org-roam-directory (file-truename "~/w/.0RG"))
 
 (setq find-file-visit-truename t)
 

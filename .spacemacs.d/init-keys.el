@@ -1,6 +1,7 @@
 ;; DEADGREP
 (global-set-key (kbd "C-;") 'deadgrep)
 
+
 ;; http://stackoverflow.com/questions/8483182/evil-mode-best-practice
 ;(define-key evil-insert-state-map "\C-a" 'evil-beginning-of-line)
 (define-key evil-normal-state-map "\C-e" 'evil-end-of-line)

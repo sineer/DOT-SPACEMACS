@@ -103,8 +103,8 @@ values."
           cargo-process-reload-on-modify    t
           elixir-backend                    'lsp)
      markdown
-     (mu4e :variables
-           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.6.11/share/emacs/site-lisp/mu/mu4e/")
+;     (mu4e :variables
+;           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.8.10/share/emacs/site-lisp/mu/mu4e/")
      multiple-cursors
      neotree
      (org :variables
@@ -148,7 +148,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(deadgrep
                                       inf-clojure
-                                      mu4e-maildirs-extension
+;                                      mu4e-maildirs-extension
                                       org-dashboard
                                       org-journal
                                       org-modern
@@ -493,15 +493,15 @@ layers configuration. You are free to put any user code."
 
   (add-to-list 'load-path "~/.spacemacs.d/")
 
-  ;; Homebrew MU 1.8.8 install path
-  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.8.8/share/emacs/site-lisp/mu/mu4e")
+  ;; Homebrew MU 1.8.13 install path
+;  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.8.13/share/emacs/site-lisp/mu/mu4e")
 
   (setq ledger-post-amount-alignment-column 68)
   (add-to-list 'auto-mode-alist '("\\.lgr$" . ledger-mode))
 
 
   (load-library "init-keys")
-  (load-library "init-mail")
+;  (load-library "init-mail")
   (load-library "init-org-mode")
   (load-library "init-w3m")
   (load-library "init-hugo")
