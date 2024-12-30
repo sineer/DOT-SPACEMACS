@@ -2,8 +2,7 @@
 ;; sineer's Spacemacs config
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
-You should not put any user code in this function besides modifying the variable
-values."
+You should not put any user code in this function besides modifying the variable values."
   (setq-default
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
@@ -41,15 +40,15 @@ values."
                       auto-completion-complete-with-key-sequence-delay 0.1
                       auto-completion-private-snippets-directory nil)
      better-defaults
-     (c-c++ :variables
-            c-c++-backend 'lsp-ccls
-            c-c++-adopt-subprojects t
-            c-c++-enable-rtags-completion nil
-            c-c++-lsp-enable-semantic-highlight 'rainbow)
+     ;; (c-c++ :variables
+     ;;        c-c++-backend 'lsp-ccls
+     ;;        c-c++-adopt-subprojects t
+     ;;        c-c++-enable-rtags-completion nil
+     ;;        c-c++-lsp-enable-semantic-highlight 'rainbow)
      ;; calendar
      csv
-     clojure
-     docker
+     ;; clojure
+     ;; docker
      ;; eaf
      emacs-lisp
      erc
@@ -58,21 +57,20 @@ values."
      (elixir :variables elixir-backend 'lsp)
      finance
      fzf
-     graphql
+     ;; graphql
      git
-     helpful
-     helm
+     ;; helpful
+     ;; helm
      hugo
      html
-     (javascript :variables
-                 javascript-backend       'lsp
-                 javascript-fmt-tool      'prettier
-                 javascript-lsp-linter    nil
-                 javascript-repl          'nodejs
-                 javascript-import-tool   'import-js
-                 node-add-modules-path    t
-                 js2-include-node-externs t)
-
+     ;;(javascript :variables
+     ;;            javascript-backend       'lsp
+     ;;            javascript-fmt-tool      'prettier
+     ;;            javascript-lsp-linter    nil
+     ;;            javascript-repl          'nodejs
+     ;;            javascript-import-tool   'import-js
+     ;;            node-add-modules-path    t
+     ;;            js2-include-node-externs t)
      json
      latex
      (lsp :variables
@@ -96,15 +94,16 @@ values."
           lsp-ui-peek-list-width            50
           ;; lsp-ui-doc-border              "orange"
           lsp-ui-doc-border                 (face-foreground 'default)
-          lsp-ui-sideline-show-code-actions t
+          lsp-ui-sideline-show-code-actions nil
           ;;lsp-ui-imenu-refresh-delay      100
           ;;lsp-ui-imenu-window-width       128
           lsp-rust-server                   'rust-analyzer
           cargo-process-reload-on-modify    t
           elixir-backend                    'lsp)
      markdown
-;     (mu4e :variables
-;           mu4e-installation-path "/opt/homebrew/Cellar/mu/1.8.10/share/emacs/site-lisp/mu/mu4e/")
+     mu4e
+     ;; (mu4e :variables
+     ;;       mu4e-installation-path "/opt/homebrew/Cellar/mu/1.8.9/share/emacs/site-lisp/mu/mu4e/")
      multiple-cursors
      neotree
      (org :variables
@@ -118,40 +117,42 @@ values."
           org-enable-roam-support t
           org-enable-roam-server t
           org-enable-roam-protocol t)
-     osx
+     ;; osx
      ;; parinfer
      ;; prodigy
-     python
+     ;; python
      (ranger :variables ranger-show-preview t)
-     (rust :variables rust-backend 'lsp)
+     ;;(rust :variables rust-backend 'lsp)
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
      spell-checking
      syntax-checking
-     themes-megapack
+     ;; themes-megapack
      treemacs
-     (typescript :variables
-                 typescript-linter   'eslint
-                 typescript-fmt-tool 'prettier
-                 typescript-backend  'lsp
-                 typescript-indent-level 2
-                 web-mode-code-indent-offset 2)
+     ;;(typescript :variables
+     ;;            typescript-linter   'eslint
+     ;;            typescript-fmt-tool 'prettier
+     ;;            typescript-backend  'lsp
+     ;;            typescript-indent-level 2
+     ;;            web-mode-code-indent-offset 2)
      (version-control :variables version-control-global-margin t)
      w3m
      yaml
-     zig)
+     ;; zig
+     )
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
-   ;l packages then consider to create a layer, you can also put the
-   ;; configuration in `dotspacemacs/user-config'.
+   ;; l packages then consider to create a layer, you can also put the
+   ;; configuration in `dotspacemacs/user-config'
    dotspacemacs-additional-packages '(deadgrep
                                       inf-clojure
-;                                      mu4e-maildirs-extension
-                                      org-dashboard
+                                      w                                     org-dashboard
                                       org-journal
                                       org-modern
+                                      quelpa
+                                      quelpa-use-package
                                       rustic)
 
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -168,10 +169,8 @@ values."
 
 (defun dotspacemacs/init ()
   "Initialization function.
-This function is called at the very startup of Spacemacs initialization
-before layers configuration.
-You should not put any user code in there besides modifying the variable
-values."
+This function is called at the very startup of Spacemacs initialization before layers configuration.
+You should not put any user code in there besides modifying the variable values."
 
   (if (eq system-type 'darwin)
       (setq system-name (car (split-string system-name "\\."))))
@@ -429,33 +428,41 @@ user code here.  The exception is org related code, which should be placed in
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
+
+  (require 'use-package)
+  (quelpa
+   '(quelpa-use-package
+     :fetcher git
+     :url "https://github.com/quelpa/quelpa-use-package.git"))
+  (require 'quelpa-use-package)
+
   ;; NO LOCK FILE
   (setq create-lockfiles nil)
 
   ;; Do not save .~undo-tree~
   (setq undo-tree-auto-save-history nil)
 
+  ;; CTRL+C/V COPY/PASTE
+  (cua-mode t)
+  (setq cua-auto-tabify-rectangles nil) ;; Don't tabify after rectangle commands
+  (transient-mark-mode 1) ;; No region when it is not highlighted
+  (setq cua-keep-region-after-copy t) ;; Standard Windows behaviour
+
 
   ;; SCROLLING
   ;; move minimum when cursor exits view, instead of recentering
   ;; (setq scroll-conservatively 101)
 
-  ;; (spacemacs/enable-smooth-scrolling)
-  ;; (use-package smooth-scroll
-  ;;   :config
-  ;;   (smooth-scroll-mode 1)
-  ;;   (setq smooth-scroll/vscroll-step-size 5))
+  (spacemacs/enable-smooth-scrolling)
 
-  ;; (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
-
-  ;; EMACS-29 BUILT-IN pixel-scroll-precision-mode ROCKS.
-  (pixel-scroll-precision-mode)
-  (setq pixel-scroll-precision-large-scroll-height 40.0)
-  (setq pixel-scroll-precision-interpolation-factor 30)
-
-
+  (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
   (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+
+  ;; EMACS-29 BUILT-IN pixel-scroll-precision-mode ROCKS.
+  ;;(pixel-scroll-precision-mode)
+  ;;(setq pixel-scroll-precision-large-scroll-height 40.0)
+  ;;(setq pixel-scroll-precision-interpolation-factor 30)
 
 
   (scroll-bar-mode)
@@ -491,20 +498,15 @@ layers configuration. You are free to put any user code."
   (setq-default c-default-style "jbsd")
 
 
+  ;; LOAD PATHs
   (add-to-list 'load-path "~/.spacemacs.d/")
+  (add-to-list 'load-path (expand-file-name "~/.emacs.d/private/"))
 
-  ;; Homebrew MU 1.8.13 install path
-;  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.8.13/share/emacs/site-lisp/mu/mu4e")
-
+  ;;  ;; Homebrew MU 1.8.8 install path
+  ;;  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.8.8/share/emacs/site-lisp/mu/mu4e")
   (setq ledger-post-amount-alignment-column 68)
   (add-to-list 'auto-mode-alist '("\\.lgr$" . ledger-mode))
 
-
-  (load-library "init-keys")
-;  (load-library "init-mail")
-  (load-library "init-org-mode")
-  (load-library "init-w3m")
-  (load-library "init-hugo")
 
   ;; LSP-UI
   (use-package lsp-ui
@@ -512,6 +514,10 @@ layers configuration. You are free to put any user code."
     :config
     (setq lsp-ui-doc-enable nil)
     (setq lsp-ui-sideline-delay 0.05))
+
+  ;; LSP TWEAKs
+  (setq gc-cons-threshold 200000000)
+  (setq read-process-output-max (* 3 1024 1024)) ;; 3mb
 
   ;; ELIXIR-LS
   (use-package lsp-mode
@@ -521,38 +527,17 @@ layers configuration. You are free to put any user code."
     :hook
     (elixir-mode . lsp)
     :init
-    (add-to-list 'exec-path "~/g/ex/elixir-ls/release"))
+    (add-to-list 'exec-path "~/g/elixir-ls/release"))
 
-  ;; RUSTic
-  (use-package rustic
-  :ensure
-  :bind (:map rustic-mode-map
-              ("M-j" . lsp-ui-imenu)
-              ("M-?" . lsp-find-references)
-              ("C-c C-c l" . flycheck-list-errors)
-              ("C-c C-c a" . lsp-execute-code-action)
-              ("C-c C-c r" . lsp-rename)
-              ("C-c C-c q" . lsp-workspace-restart)
-              ("C-c C-c Q" . lsp-workspace-shutdown)
-              ("C-c C-c s" . lsp-rust-analyzer-status))
-  :config
-  ;; uncomment for less flashiness
-  ;; (setq lsp-eldoc-hook nil)
-  ;; (setq lsp-enable-symbol-highlighting nil)
-  ;; (setq lsp-signature-auto-activate nil)
 
-  ;; comment to disable rustfmt on save
-  (setq rustic-format-on-save t)
-  (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
-
-  (defun rk/rustic-mode-hook ()
-    ;; so that run C-c C-c C-r works without having to confirm, but don't try to
-    ;; save rust buffers that are not file visiting. Once
-    ;; https://github.com/brotzeit/rustic/issues/253 has been resolved this should
-    ;; no longer be necessary.
-    (when buffer-file-name
-      (setq-local buffer-save-without-query t)))
-
+  ;; EMACS-GDB
+  ;; https://github.com/weirdNox/emacs-gdb
+  ;;(use-package gdb-mi :quelpa (gdb-mi :fetcher git
+  ;;                                  :url "https://github.com/weirdNox/emacs-gdb.git"
+  ;;                                  :files ("*.el" "*.c" "*.h" "Makefile")))
+  ;;:init
+  ;;(fmakunbound 'gdb)
+  ;;(fmakunbound 'gdb-enable-debug))
   (add-hook 'org-mode-hook #'org-modern-mode)
   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
@@ -562,6 +547,7 @@ layers configuration. You are free to put any user code."
   ;; http://emacs.stackexchange.com/questions/14940/emacs-doesnt-paste-in-evils-visual-mode-with-every-os-clipboard/15054#15054
   (fset 'evil-visual-update-x-selection 'ignore)
 
+  ;; XXX
   ;; (prefer-coding-system 'utf-8)
   ;; (set-default-coding-systems 'utf-8)
   ;; (set-terminal-coding-system 'utf-8)
@@ -582,13 +568,16 @@ layers configuration. You are free to put any user code."
 
   (global-set-key (kbd "<S-mouse-3>") 'middle-click)
 
+  ;; FIX MOUSE SHIFT-SELECTION OF TEXT!
+  ;; https://christiantietze.de/posts/2022/07/shift-click-in-emacs-to-select/
+  (global-set-key (kbd "S-<down-mouse-1>") #'mouse-set-mark)
 
   (use-package flycheck :ensure)
   (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
   (eval-after-load "flyspell"
-   '(progn
-      (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
-      (define-key flyspell-mouse-map [mouse-3] #'undefined)))
+    '(progn
+       (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
+       (define-key flyspell-mouse-map [mouse-3] #'undefined)))
 
   (define-key key-translation-map (kbd "<S-mouse-3>") (kbd "<mouse-2>"))
 
@@ -640,14 +629,24 @@ layers configuration. You are free to put any user code."
 
   ;; XXX Still req ???
   ;; BufferList cursor reset fix (https://github.com/syl20bnr/spacemacs/issues/2667)
-  (add-hook 'Buffer-menu-mode-hook
-            (lambda ()
-              (setq-local revert-buffer-function
-                          (lambda (&rest args)))))
+  ;; (add-hook 'Buffer-menu-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local revert-buffer-function
+  ;;                         (lambda (&rest args)))))
+
+  ;; LINUX CHROMIUM
+  (setq browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "/home/cluster/bin/chrome-linux/chrome")
 
 
+  (load-library "init-keys")
+  (load-library "init-mail")
+  (load-library "init-w3m")
+  (load-library "init-hugo")
+  (load-library "init-org-mode")
+  ;; (load-library "init-equake")
+  ;; (load-library "init-rust")
 
-  (load-library "init-equake")
   )
 
 
@@ -691,50 +690,50 @@ layers configuration. You are free to put any user code."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
- '(blink-cursor-mode nil)
- '(column-number-mode t)
- '(erc-nick "sineer")
- '(erc-nickserv-alist
-   '((freenode "Nickserv's nick!user@host: NickServ!NickServ@services." "\2/msg\\s-NickServ\\s-identify\\s-<password>\2" "NickServ" "identify" nil nil "You are now identified for \2\\S-+\2\\.")))
- '(evil-want-Y-yank-to-eol t)
- '(fci-rule-color "gray80" t)
- '(global-display-line-numbers-mode t)
- '(highlight-parentheses-background-colors
-   '("#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" "#CC99FF" "#9999FF" "#99CCFF" "#99FFCC" "#7FFF00"))
- '(highlight-parentheses-colors '("#326B6B"))
- '(highlight-symbol-colors
-   '("#EFFF00" "#73CD4F" "#83DDFF" "MediumPurple1" "#66CDAA" "DarkOrange" "HotPink1" "#809FFF" "#ADFF2F"))
- '(hl-paren-background-colors
-   '("#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" "#CC99FF" "#9999FF" "#99CCFF" "#99FFCC" "#7FFF00"))
- '(hl-paren-colors '("#326B6B"))
- '(lsp-file-watch-ignored-directories
-   '("[/\\\\]\\.git\\'" "[/\\\\]\\.github\\'" "[/\\\\]\\.circleci\\'" "[/\\\\]\\.hg\\'" "[/\\\\]\\.bzr\\'" "[/\\\\]_darcs\\'" "[/\\\\]\\.svn\\'" "[/\\\\]_FOSSIL_\\'" "[/\\\\]\\.idea\\'" "[/\\\\]\\.ensime_cache\\'" "[/\\\\]\\.eunit\\'" "[/\\\\]node_modules" "[/\\\\]\\.yarn\\'" "[/\\\\]\\.fslckout\\'" "[/\\\\]\\.tox\\'" "[/\\\\]dist\\'" "[/\\\\]dist-newstyle\\'" "[/\\\\]\\.stack-work\\'" "[/\\\\]\\.bloop\\'" "[/\\\\]\\.metals\\'" "[/\\\\]target\\'" "[/\\\\]\\.ccls-cache\\'" "[/\\\\]\\.vscode\\'" "[/\\\\]\\.venv\\'" "[/\\\\]\\.mypy_cache\\'" "[/\\\\]\\.deps\\'" "[/\\\\]build-aux\\'" "[/\\\\]autom4te.cache\\'" "[/\\\\]\\.reference\\'" "[/\\\\]\\.lsp\\'" "[/\\\\]\\.clj-kondo\\'" "[/\\\\]\\.shadow-cljs\\'" "[/\\\\]\\.babel_cache\\'" "[/\\\\]\\.cpcache\\'" "[/\\\\]\\checkouts\\'" "[/\\\\]\\.m2\\'" "[/\\\\]bin/Debug\\'" "[/\\\\]obj\\'" "[/\\\\]_opam\\'" "[/\\\\]_build\\'" "[/\\\\]\\.elixir_ls\\'" "[/\\\\]\\.direnv\\'" "[/\\\\]\\build\\'"))
- '(menu-bar-mode nil)
- '(org-src-block-faces '(("emacs-lisp" (:background "#F0FFF0"))))
- '(package-selected-packages
-   '(add-node-modules-path powerline org-mime parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f dash hydra s highlight sesman spinner pkg-info epl bind-map bind-key packed helm avy helm-core async popup yaml-mode xterm-color web-mode web-beautify tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder ranger pug-mode prodigy pbcopy parinfer osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro org-journal org-download org-dashboard multi-term ht alert log4e gntp mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode ledger-mode launchctl js2-refactor js2-mode js-doc htmlize helm-w3m w3m helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex auto-complete organic-green-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu erlang elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))
- '(paradox-github-token t)
- '(safe-local-variable-values
-   '((cider-ns-refresh-after-fn . "development/go")
-     (cider-ns-refresh-before-fn . "development/stop")
-     (eval put-clojure-indent :require 0)
-     (javascript-backend . tide)
-     (javascript-backend . tern)
-     (javascript-backend . lsp)))
- '(tool-bar-mode nil)
- '(warning-suppress-log-types '((comp))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 180 :width normal))))
- '(highlight-parentheses-highlight ((nil (:weight ultra-bold))) t))
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(ansi-color-names-vector
+     ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+   '(blink-cursor-mode nil)
+   '(column-number-mode t)
+   '(erc-nick "sineer")
+   '(erc-nickserv-alist
+     '((freenode "Nickserv's nick!user@host: NickServ!NickServ@services." "\2/msg\\s-NickServ\\s-identify\\s-<password>\2" "NickServ" "identify" nil nil "You are now identified for \2\\S-+\2\\.")))
+   '(evil-want-Y-yank-to-eol t)
+   '(fci-rule-color "gray80" t)
+   '(global-display-line-numbers-mode t)
+   '(highlight-parentheses-background-colors
+     '("#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" "#CC99FF" "#9999FF" "#99CCFF" "#99FFCC" "#7FFF00"))
+   '(highlight-parentheses-colors '("#326B6B"))
+   '(highlight-symbol-colors
+     '("#EFFF00" "#73CD4F" "#83DDFF" "MediumPurple1" "#66CDAA" "DarkOrange" "HotPink1" "#809FFF" "#ADFF2F"))
+   '(hl-paren-background-colors
+     '("#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" "#CC99FF" "#9999FF" "#99CCFF" "#99FFCC" "#7FFF00"))
+   '(hl-paren-colors '("#326B6B"))
+   '(lsp-file-watch-ignored-directories
+     '("[/\\\\]\\.git\\'" "[/\\\\]\\.github\\'" "[/\\\\]\\.circleci\\'" "[/\\\\]\\.hg\\'" "[/\\\\]\\.bzr\\'" "[/\\\\]_darcs\\'" "[/\\\\]\\.svn\\'" "[/\\\\]_FOSSIL_\\'" "[/\\\\]\\.idea\\'" "[/\\\\]\\.ensime_cache\\'" "[/\\\\]\\.eunit\\'" "[/\\\\]node_modules" "[/\\\\]\\.yarn\\'" "[/\\\\]\\.fslckout\\'" "[/\\\\]\\.tox\\'" "[/\\\\]dist\\'" "[/\\\\]dist-newstyle\\'" "[/\\\\]\\.stack-work\\'" "[/\\\\]\\.bloop\\'" "[/\\\\]\\.metals\\'" "[/\\\\]target\\'" "[/\\\\]\\.ccls-cache\\'" "[/\\\\]\\.vscode\\'" "[/\\\\]\\.venv\\'" "[/\\\\]\\.mypy_cache\\'" "[/\\\\]\\.deps\\'" "[/\\\\]build-aux\\'" "[/\\\\]autom4te.cache\\'" "[/\\\\]\\.reference\\'" "[/\\\\]\\.lsp\\'" "[/\\\\]\\.clj-kondo\\'" "[/\\\\]\\.shadow-cljs\\'" "[/\\\\]\\.babel_cache\\'" "[/\\\\]\\.cpcache\\'" "[/\\\\]\\checkouts\\'" "[/\\\\]\\.m2\\'" "[/\\\\]bin/Debug\\'" "[/\\\\]obj\\'" "[/\\\\]_opam\\'" "[/\\\\]_build\\'" "[/\\\\]\\.elixir_ls\\'" "[/\\\\]\\.direnv\\'" "[/\\\\]\\build\\'"))
+   '(menu-bar-mode nil)
+   '(org-src-block-faces '(("emacs-lisp" (:background "#F0FFF0"))))
+   '(package-selected-packages
+     '(mu4e-alert powerline org-mime parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f dash hydra s highlight sesman spinner pkg-info epl bind-map bind-key packed helm avy helm-core async popup yaml-mode xterm-color web-mode web-beautify tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder ranger pug-mode prodigy pbcopy parinfer osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro org-journal org-download org-dashboard multi-term ht alert log4e gntp mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode ledger-mode launchctl js2-refactor js2-mode js-doc htmlize helm-w3m w3m helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex auto-complete organic-green-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu erlang elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))
+   '(paradox-github-token t)
+   '(safe-local-variable-values
+     '((cider-ns-refresh-after-fn . "development/go")
+       (cider-ns-refresh-before-fn . "development/stop")
+       (eval put-clojure-indent :require 0)
+       (javascript-backend . tide)
+       (javascript-backend . tern)
+       (javascript-backend . lsp)))
+   '(tool-bar-mode nil)
+   '(warning-suppress-log-types '((comp))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 180 :width normal))))
+   '(highlight-parentheses-highlight ((nil (:weight ultra-bold))) t))
+  )

@@ -1,12 +1,11 @@
+;;(setq mu4e-mu-binary "/opt/homebrew/bin/mu")
 
-(setq mu4e-mu-binary "/opt/homebrew/bin/mu")
 
-
-(setq message-send-mail-function 'message-send-mail-with-sendmail)
-(setq sendmail-program "msmtp")
-;; tell msmtp to choose the SMTP server according to the from field in the outgoing email
-(setq message-sendmail-extra-arguments '("--read-envelope-from"))
-(setq message-sendmail-f-is-evil 't)
+(setq sendmail-program "msmtp"
+      send-mail-function 'smtpmail-send-it
+      message-sendmail-f-is-evil t
+      message-sendmail-extra-arguments '("--read-envelope-from")
+      message-send-mail-function 'message-send-mail-with-sendmail)
 
 ;; don't keep message buffers around
 (setq message-kill-buffer-on-exit t)
@@ -65,7 +64,9 @@
 
 
 (setq mu4e-change-filenames-when-moving t)
-(setq message-signature-file "~/.spacemacs.d/.signature")
+
+;; XXX
+;;(setq message-signature-file "~/.spacemacs.d/.signature")
 
 (setq mu4e-enable-mode-line t)
 
@@ -79,6 +80,8 @@
 ;;;; mu4e-html2text-command "w3m -dump -cols 80 -O UTF-8 -I UTF-8 -T text/html"
 ;;;; mu4e-html2text-comment "textutil -stdin -format html -convert txt -stdout"
 ;;;; mu4e-html2text-command "html2text -utf8 -nobs -width 80"
+
+
 ;; (require 'mu4e-contrib)
 ;; (setq mu4e-html2text-command 'mu4e-shr2text)
 (defun my-render-html-message ()
@@ -98,18 +101,17 @@
 ;;     user-mail-address "me@example.com"
 ;;     user-full-name  "Rob Stewart")
 
+;; XXX ???
 ;; don't save message to Sent Messages, IMAP takes care of this
-                                        ; (setq mu4e-sent-messages-behavior 'delete)
+;; (setq mu4e-sent-messages-behavior 'delete)
 
-;;; XXX spell check
-;;(flyspell-mode)
 
 (add-hook 'mu4e-compose-mode-hook
           (defun my-do-compose-stuff ()
             "My settings for message composition."
             (set-fill-column 80)))
 
-(mu4e-maildirs-extension)
+;; XXX (mu4e-maildirs-extension)
 
 ;;; XXX ???
 ;;;(defun my-mu4e-maildirs-extension-always-update ()
@@ -117,9 +119,11 @@
 ;;;(add-hook 'mu4e-main-mode-hook 'my-mu4e-maildirs-extension-always-update)
 
 
-(setq mu4e-get-mail-command (format "INSIDE_EMACS=%s mbsync -a" emacs-version)
-      epa-pinentry-mode 'ask)
+(setq mu4e-get-mail-command (format "INSIDE_EMACS=%s mbsync -a" emacs-version))
+
+(setf epa-pinentry-mode 'loopback)
+;;(require 'epg)
+;;(pinentry-start)
 
 ;;; mu4e private config
-;;; XXX
-;; (load-library "init-mail-priv")
+(load-library "init-mail-priv")

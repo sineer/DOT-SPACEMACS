@@ -3,7 +3,7 @@
 
 
 ;; http://stackoverflow.com/questions/8483182/evil-mode-best-practice
-;(define-key evil-insert-state-map "\C-a" 'evil-beginning-of-line)
+;;(define-key evil-insert-state-map "\C-a" 'evil-beginning-of-line)
 (define-key evil-normal-state-map "\C-e" 'evil-end-of-line)
 (define-key evil-visual-state-map "\C-e" 'evil-end-of-line)
 (define-key evil-motion-state-map "\C-e" 'evil-end-of-line)
@@ -46,49 +46,51 @@
 ;;     (call-interactively (key-binding (this-command-keys)))))
 
 ;; UNDO/REDO
-(define-key evil-normal-state-map (kbd "C-z") 'undo-tree-undo)
-(define-key evil-insert-state-map (kbd "C-z") 'undo-tree-undo)
-(define-key evil-visual-state-map (kbd "C-z") 'undo-tree-undo)
-(define-key evil-hybrid-state-map (kbd "C-z") 'undo-tree-undo)
+(define-key evil-normal-state-map (kbd "C-z") 'undo-fu-only-undo)
+(define-key evil-insert-state-map (kbd "C-z") 'undo-fu-only-undo)
+(define-key evil-visual-state-map (kbd "C-z") 'undo-fu-only-undo)
+(define-key evil-hybrid-state-map (kbd "C-z") 'undo-fu-only-undo)
 
-(define-key evil-normal-state-map (kbd "C-S-z") 'undo-tree-redo)
-(define-key evil-insert-state-map (kbd "C-S-z") 'undo-tree-redo)
-(define-key evil-visual-state-map (kbd "C-S-z") 'undo-tree-redo)
-(define-key evil-hybrid-state-map (kbd "C-S-z") 'undo-tree-redo)
+(define-key evil-normal-state-map (kbd "C-S-z") 'undo-fu-only-redo)
+(define-key evil-insert-state-map (kbd "C-S-z") 'undo-fu-only-redo)
+(define-key evil-visual-state-map (kbd "C-S-z") 'undo-fu-only-redo)
+(define-key evil-hybrid-state-map (kbd "C-S-z") 'undo-fu-only-redo)
 
-(define-key evil-normal-state-map (kbd "M-z") 'undo-tree-undo)
-(define-key evil-insert-state-map (kbd "M-z") 'undo-tree-undo)
-(define-key evil-visual-state-map (kbd "M-z") 'undo-tree-undo)
-(define-key evil-hybrid-state-map (kbd "M-z") 'undo-tree-undo)
+(define-key evil-normal-state-map (kbd "M-z") 'undo-fu-only-undo)
+(define-key evil-insert-state-map (kbd "M-z") 'undo-fu-only-undo)
+(define-key evil-visual-state-map (kbd "M-z") 'undo-fu-only-undo)
+(define-key evil-hybrid-state-map (kbd "M-z") 'undo-fu-only-undo)
 
-(define-key evil-normal-state-map (kbd "M-Z") 'undo-tree-redo)
-(define-key evil-insert-state-map (kbd "M-Z") 'undo-tree-redo)
-(define-key evil-visual-state-map (kbd "M-Z") 'undo-tree-redo)
-(define-key evil-hybrid-state-map (kbd "M-Z") 'undo-tree-redo)
+(define-key evil-normal-state-map (kbd "M-Z") 'undo-fu-only-redo)
+(define-key evil-insert-state-map (kbd "M-Z") 'undo-fu-only-redo)
+(define-key evil-visual-state-map (kbd "M-Z") 'undo-fu-only-redo)
+(define-key evil-hybrid-state-map (kbd "M-Z") 'undo-fu-only-redo)
 
 
 
-;;  (defun delete-line-no-kill ()
-;;    (delete-region (point) (line-end-position)))
-;;  (global-set-key (kbd "C-k") 'delete-line-no-kill)
+(defun delete-line-no-kill ()
+  (delete-region (point) (line-end-position)))
 (global-set-key (kbd "C-k") 'delete-line-no-kill)
+
 
 ;; Barfage & Slurpage
 (global-set-key (kbd "C-)") 'sp-forward-slurp-sexp)
-(global-set-key (kbd "C-S-<right>") 'sp-forward-slurp-sexp)
+(global-set-key (kbd "M-S-<right>") 'sp-forward-slurp-sexp) ;; XXX
 (global-set-key (kbd "C-}") 'sp-forward-barf-sexp)
-(global-set-key (kbd "C-S-<left>") 'sp-forward-barf-sexp)
+(global-set-key (kbd "M-S-<left>") 'sp-forward-barf-sexp) ;; XXX
 (global-set-key (kbd "C-(") 'sp-backward-slurp-sexp)
 (global-set-key (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
 (global-set-key (kbd "C-{") 'sp-backward-barf-sexp)
 (global-set-key (kbd "C-M-<right>") 'sp-backward-barf-sexp)
 
 ;; COMMENT-REGION
+(global-set-key (kbd "C-;") 'comment-region)
 (global-set-key (kbd "C-?") 'uncomment-region)
-(eval-after-load 'undo-tree
-  '(progn
-     (define-key undo-tree-map (kbd "C-?") nil)
-     (define-key undo-tree-map (kbd "C-/") nil)))
+
+;;(eval-after-load 'undo-tree
+;;  '(progn
+;;     (define-key undo-tree-map (kbd "C-?") nil)
+;;     (define-key undo-tree-map (kbd "C-/") nil)))
 
 ;; EVIL-WINDOW-UP/DOWN/LEFT/RIGHT AND SIDE TO SIDE!
 (global-set-key (kbd "M-s-<up>") 'evil-window-up)
