@@ -75,9 +75,9 @@
 
 ;; Barfage & Slurpage
 (global-set-key (kbd "C-)") 'sp-forward-slurp-sexp)
-(global-set-key (kbd "M-S-<right>") 'sp-forward-slurp-sexp) ;; XXX
+(global-set-key (kbd "M-S-<right>") 'sp-forward-slurp-sexp)
 (global-set-key (kbd "C-}") 'sp-forward-barf-sexp)
-(global-set-key (kbd "M-S-<left>") 'sp-forward-barf-sexp) ;; XXX
+(global-set-key (kbd "M-S-<left>") 'sp-forward-barf-sexp)
 (global-set-key (kbd "C-(") 'sp-backward-slurp-sexp)
 (global-set-key (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
 (global-set-key (kbd "C-{") 'sp-backward-barf-sexp)

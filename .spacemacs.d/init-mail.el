@@ -1,5 +1,11 @@
 ;;(setq mu4e-mu-binary "/opt/homebrew/bin/mu")
 
+;; general emacs mail settings; used when composing e-mail
+;; the non-mu4e-* stuff is inherited from emacs/message-mode
+;; (setq mu4e-reply-to-address "me@example.com"
+;;     user-mail-address "me@example.com"
+;;     user-full-name  "Rob Stewart")
+
 
 (setq sendmail-program "msmtp"
       send-mail-function 'smtpmail-send-it
@@ -39,6 +45,56 @@
 ;;("tag:\\\\.SENT AND date:365d..now" "Sent"                 ?s)
 
 
+(setq mu4e-change-filenames-when-moving t)
+
+;; XXX ???
+;; don't save message to Sent Messages, IMAP takes care of this
+;; (setq mu4e-sent-messages-behavior 'delete)
+
+;; (require 'mu4e-contrib)
+
+
+;; XXX
+;;(setq message-signature-file "~/.spacemacs.d/.signature")
+
+
+(setq mu4e-enable-mode-line t)
+
+(setq mu4e-view-show-addresses  t
+      mu4e-view-show-images     t
+      mu4e-show-images          t
+      mu4e-view-image-max-width 800)
+
+
+;; (setq mu4e-html2text-command 'mu4e-shr2text)
+(defun my-render-html-message ()
+  (let ((dom (libxml-parse-html-region (point-min) (point-max))))
+    (erase-buffer)
+    (shr-insert-document dom)
+    (goto-char (point-min))))
+(setq mu4e-html2text-command 'my-render-html-message)
+
+;;;; mu4e-html2text-command "LC_CTYPE=en_US.ISO-8859-1 w3m -I 'iso-8859-1' -T text/html"
+;;;; mu4e-html2text-command "w3m -I utf8 -O utf8 -T text/html"
+;;;; mu4e-html2text-command "w3m -dump -cols 80 -O UTF-8 -I UTF-8 -T text/html"
+;;;; mu4e-html2text-comment "textutil -stdin -format html -convert txt -stdout"
+;;;; mu4e-html2text-command "html2text -utf8 -nobs -width 80"
+
+
+;; use imagemagick, if available
+(when (fboundp 'imagemagick-register-types)
+  (imagemagick-register-types))
+
+(add-hook 'mu4e-compose-mode-hook
+          (defun my-do-compose-stuff ()
+            "My settings for message composition."
+            (set-fill-column 80)))
+
+(setq mu4e-get-mail-command (format "INSIDE_EMACS=%s mbsync -a" emacs-version))
+
+(setf epa-pinentry-mode 'loopback)
+
+
 ;; Custom actions
 ;; -----------------------------------------------
 
@@ -62,68 +118,6 @@
 
 ;; -----------------------------------------------
 
-
-(setq mu4e-change-filenames-when-moving t)
-
-;; XXX
-;;(setq message-signature-file "~/.spacemacs.d/.signature")
-
-(setq mu4e-enable-mode-line t)
-
-(setq mu4e-view-show-addresses  t
-      mu4e-view-show-images     t
-      mu4e-show-images          t
-      mu4e-view-image-max-width 800)
-
-;;;; mu4e-html2text-command "LC_CTYPE=en_US.ISO-8859-1 w3m -I 'iso-8859-1' -T text/html"
-;;;; mu4e-html2text-command "w3m -I utf8 -O utf8 -T text/html"
-;;;; mu4e-html2text-command "w3m -dump -cols 80 -O UTF-8 -I UTF-8 -T text/html"
-;;;; mu4e-html2text-comment "textutil -stdin -format html -convert txt -stdout"
-;;;; mu4e-html2text-command "html2text -utf8 -nobs -width 80"
-
-
-;; (require 'mu4e-contrib)
-;; (setq mu4e-html2text-command 'mu4e-shr2text)
-(defun my-render-html-message ()
-  (let ((dom (libxml-parse-html-region (point-min) (point-max))))
-    (erase-buffer)
-    (shr-insert-document dom)
-    (goto-char (point-min))))
-(setq mu4e-html2text-command 'my-render-html-message)
-
-;; use imagemagick, if available
-(when (fboundp 'imagemagick-register-types)
-  (imagemagick-register-types))
-
-;; general emacs mail settings; used when composing e-mail
-;; the non-mu4e-* stuff is inherited from emacs/message-mode
-;; (setq mu4e-reply-to-address "me@example.com"
-;;     user-mail-address "me@example.com"
-;;     user-full-name  "Rob Stewart")
-
-;; XXX ???
-;; don't save message to Sent Messages, IMAP takes care of this
-;; (setq mu4e-sent-messages-behavior 'delete)
-
-
-(add-hook 'mu4e-compose-mode-hook
-          (defun my-do-compose-stuff ()
-            "My settings for message composition."
-            (set-fill-column 80)))
-
-;; XXX (mu4e-maildirs-extension)
-
-;;; XXX ???
-;;;(defun my-mu4e-maildirs-extension-always-update ()
-;;;  (mu4e-maildirs-extension-force-update '(4)))
-;;;(add-hook 'mu4e-main-mode-hook 'my-mu4e-maildirs-extension-always-update)
-
-
-(setq mu4e-get-mail-command (format "INSIDE_EMACS=%s mbsync -a" emacs-version))
-
-(setf epa-pinentry-mode 'loopback)
-;;(require 'epg)
-;;(pinentry-start)
 
 ;;; mu4e private config
 (load-library "init-mail-priv")

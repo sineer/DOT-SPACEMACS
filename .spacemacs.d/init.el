@@ -26,7 +26,7 @@ You should not put any user code in this function besides modifying the variable
 
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   dotspacemacs-configuration-layer-path '("~/.spacemacs.d/public/")
 
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
@@ -56,7 +56,7 @@ You should not put any user code in this function besides modifying the variable
      erlang
      (elixir :variables elixir-backend 'lsp)
      finance
-     fzf
+     ;; XXX fzf
      ;; graphql
      git
      ;; helpful
@@ -264,7 +264,6 @@ You should not put any user code in there besides modifying the variable values.
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; XXX
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font
@@ -501,6 +500,8 @@ layers configuration. You are free to put any user code."
   ;; LOAD PATHs
   (add-to-list 'load-path "~/.spacemacs.d/")
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/private/"))
+  (add-to-list 'load-path (expand-file-name "~/.spacemacs.d/public/"))
+
 
   ;;  ;; Homebrew MU 1.8.8 install path
   ;;  (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.8.8/share/emacs/site-lisp/mu/mu4e")
@@ -547,7 +548,7 @@ layers configuration. You are free to put any user code."
   ;; http://emacs.stackexchange.com/questions/14940/emacs-doesnt-paste-in-evils-visual-mode-with-every-os-clipboard/15054#15054
   (fset 'evil-visual-update-x-selection 'ignore)
 
-  ;; XXX
+  ;; XXX ???
   ;; (prefer-coding-system 'utf-8)
   ;; (set-default-coding-systems 'utf-8)
   ;; (set-terminal-coding-system 'utf-8)
@@ -600,39 +601,20 @@ layers configuration. You are free to put any user code."
      (save-excursion (move-end-of-line 1) (point)))
     (delete-char 1))
 
-  ;; XXX Break dired mode ???
+  ;; XXX ??? Break dired mode ???
 ;;;  (add-hook 'dired-mode-hook 'deer)
 
-  ;; XXX PARINFER
+  ;; PARINFER
   ;; (parinfer/init-parinfer)
 
   ;; XXX ???
   ;;  (global-diff-hl-mode)
-
-  ;; XXX Obsolete ???
-  (defun cider-figwheel-repl ()
-    (interactive)
-    (save-some-buffers)
-    (with-current-buffer (cider-current-repl-buffer)
-      (goto-char (point-max))
-      (insert "(require 'figwheel-sidecar.repl-api)
-             (figwheel-sidecar.repl-api/start-figwheel!) ; idempotent
-             (figwheel-sidecar.repl-api/cljs-repl)")
-      (cider-repl-return)))
-
-  (global-set-key (kbd "C-c C-f") #'cider-figwheel-repl)
 
 
   ;;; SPACELINE
   (spaceline-toggle-minor-modes-off)
   (spaceline-toggle-buffer-size-off)
 
-  ;; XXX Still req ???
-  ;; BufferList cursor reset fix (https://github.com/syl20bnr/spacemacs/issues/2667)
-  ;; (add-hook 'Buffer-menu-mode-hook
-  ;;           (lambda ()
-  ;;             (setq-local revert-buffer-function
-  ;;                         (lambda (&rest args)))))
 
   ;; LINUX CHROMIUM
   (setq browse-url-browser-function 'browse-url-generic
@@ -644,7 +626,7 @@ layers configuration. You are free to put any user code."
   (load-library "init-w3m")
   (load-library "init-hugo")
   (load-library "init-org-mode")
-  ;; (load-library "init-equake")
+  ;; XXX (load-library "init-equake")
   ;; (load-library "init-rust")
 
   )

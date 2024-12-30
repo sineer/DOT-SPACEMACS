@@ -42,7 +42,7 @@
 
 
 ;;; ORG-ROAM
-setq org-roam-directory (file-truename "~/.0RG"))
+(setq org-roam-directory (file-truename "~/.0RG"))
 (setq find-file-visit-truename t)
 
 (org-roam-db-autosync-mode)
