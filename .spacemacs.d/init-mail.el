@@ -13,12 +13,18 @@
       message-sendmail-extra-arguments '("--read-envelope-from")
       message-send-mail-function 'message-send-mail-with-sendmail)
 
+;; Only ask if a context hasn't been previously picked
+;;(setq mu4e-compose-context-policy 'ask-if-none)
+
+;; Make sure plain text mails flow correctly for recipients
+(setq mu4e-compose-format-flowed t)
+
 ;; don't keep message buffers around
 (setq message-kill-buffer-on-exit t)
 
 ;; threading and duplicates
 (setq mu4e-use-fancy-chars t)
-;; (setq mu4e-headers-results-limit 500)
+(setq mu4e-headers-results-limit 50000)
 ;; (setq mu4e-headers-show-threads nil)
 ;; (setq mu4e-headers-skip-duplicates t)
 
@@ -40,9 +46,12 @@
       '(("flag:unread"                      "New"                  ?n)
         ("flag:flagged"                     "Flagged"              ?g)
         ("date:today..now"                  "Today's messages"     ?t)
-        ("date:7d..now"                     "Last 7 days"          ?w)))
-;;("mime:image/*"                     "Messages with images" ?p)
-;;("tag:\\\\.SENT AND date:365d..now" "Sent"                 ?s)
+        ("date:7d..now"                     "Last 7 days"          ?w)
+        ("mime:image/*"                     "Messages with images" ?p)
+        ("tag:\\\\.SENT AND date:365d..now" "Sent"                 ?s)
+        ("mime:application/pdf"             "Messages with PDF"    ?p)
+        ("mime:text/calendar"    "Messages with calendar event"    ?e)
+        ))
 
 
 (setq mu4e-change-filenames-when-moving t)
@@ -92,7 +101,9 @@
 
 (setq mu4e-get-mail-command (format "INSIDE_EMACS=%s mbsync -a" emacs-version))
 
+;; BUILT-IN EMACS PINENTRY
 (setf epa-pinentry-mode 'loopback)
+(pinentry-start)
 
 
 ;; Custom actions
