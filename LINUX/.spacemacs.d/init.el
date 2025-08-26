@@ -501,7 +501,6 @@ layers configuration. You are free to put any user code."
   ;; LOAD PATHs
   (add-to-list 'load-path "~/.spacemacs.d/")
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/private/"))
-  (add-to-list 'load-path (expand-file-name "~/.spacemacs.d/public/"))
 
 
   ;;  ;; Homebrew MU 1.8.8 install path
