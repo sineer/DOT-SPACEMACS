@@ -31,7 +31,8 @@ You should not put any user code in this function besides modifying the variable
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
-   '(python
+   '(shell-scripts
+     python
      (auto-completion :variables
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-sort-by-usage t
@@ -242,7 +243,8 @@ You should not put any user code in there besides modifying the variable values.
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(alect-black
+   dotspacemacs-themes '(doom-dracula
+                         alect-black
                          ample-zen
                          cyberpunk
                          ir-black
@@ -264,20 +266,6 @@ You should not put any user code in there besides modifying the variable values.
 
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
-
-   ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
-   ;; size to make separators look not too crappy.
-   dotspacemacs-default-font
-   (cond
-    ((equal system-name "s1x")
-     '("Source Code Pro"
-       :size 13
-       :weight light
-       :width normal
-       :powerline-scale 1.0))
-    (t
-     '("Fira Code"
-       :size 21)))
 
    ;; The leader key
    dotspacemacs-leader-key "SPC"
@@ -378,6 +366,13 @@ You should not put any user code in there besides modifying the variable values.
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
+   ;; If non-nil smartparens-mode will be enabled in programming modes.
+   ;; (default t)
+   dotspacemacs-activate-smartparens-mode t
+   ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
+   ;; over any automatically added closing parenthesis, bracket, quote, etc...
+   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
+   dotspacemacs-smart-closing-parenthesis nil
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -403,15 +398,91 @@ You should not put any user code in there besides modifying the variable values.
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg", "grep")
+
+   ;; The backend used for undo/redo functionality. Possible values are
+   ;; `undo-fu', `undo-redo' and `undo-tree' see also `evil-undo-system'.
+   ;; Note that saved undo history does not get transferred when changing
+   ;; your undo system. The default is currently `undo-fu' as `undo-tree'
+   ;; is not maintained anymore and `undo-redo' is very basic."
+   dotspacemacs-undo-system 'undo-tree
+
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
    dotspacemacs-default-package-repository nil
+
+   ;; Format specification for setting the frame title.
+   ;; %a - the `abbreviated-file-name', or `buffer-name'
+   ;; %t - `projectile-project-name'
+   ;; %I - `invocation-name'
+   ;; %S - `system-name'
+   ;; %U - contents of $USER
+   ;; %b - buffer name
+   ;; %f - visited file name
+   ;; %F - frame name
+   ;; %s - process status
+   ;; %p - percent of buffer above top of window, or Top, Bot or All
+   ;; %P - percent of buffer above bottom of window, perhaps plus Top, or Bot or All
+   ;; %m - mode name
+   ;; %n - Narrow if appropriate
+   ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
+   ;; %Z - like %z, but including the end-of-line format
+   ;; If nil then Spacemacs uses default `frame-title-format' to avoid
+   ;; performance issues, instead of calculating the frame title by
+   ;; `spacemacs/title-prepare' all the time.
+   ;; (default "%I@%S")
+   dotspacemacs-frame-title-format "%I@%S"
+
+   ;; Format specification for setting the icon title format
+   ;; (default nil - same as frame-title-format)
+   dotspacemacs-icon-title-format nil
+
+   ;; Color highlight trailing whitespace in all prog-mode and text-mode derived
+   ;; modes such as c++-mode, python-mode, emacs-lisp, html-mode, rst-mode etc.
+   ;; (default t)
+   dotspacemacs-show-trailing-whitespace t
+
+
    ;; Delete whitespace while saving buffer. Possible values are `all',
    ;; `trailing', `changed' or `nil'. Default is `changed' (cleanup whitespace
    ;; on changed lines) (default 'changed)
    dotspacemacs-whitespace-cleanup 'changed
+
+   ;; If non-nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfere with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
+
+   ;; Accept SPC as y for prompts if non-nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
+
+   ;; If non-nil shift your number row to match the entered keyboard layout
+   ;; (only in insert state). Currently supported keyboard layouts are:
+   ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+   ;; New layouts can be added in `spacemacs-editing' layer.
+   ;; (default nil)
+   dotspacemacs-swap-number-row nil
+
+   ;; Either nil or a number of seconds. If non-nil zone out after the specified
+   ;; number of seconds. (default nil)
+   dotspacemacs-zone-out-when-idle nil
+
+   ;; Run `spacemacs/prettify-org-buffer' when
+   ;; visiting README.org files of Spacemacs.
+   ;; (default nil)
+   dotspacemacs-pretty-docs nil
+
+   ;; If nil the home buffer shows the full path of agenda items
+   ;; and todos. If non-nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile t
+
+
    ))
 
 (defun dotspacemacs/user-init ()
@@ -476,7 +547,7 @@ layers configuration. You are free to put any user code."
 
 
   ;; NO "SMART" PARENS PLEASE
-  (spacemacs/toggle-smartparens-globally-off)
+  ;; XXX (spacemacs/toggle-smartparens-globally-off)
 
 
   ;; C-STYLE
@@ -501,6 +572,7 @@ layers configuration. You are free to put any user code."
   ;; LOAD PATHs
   (add-to-list 'load-path "~/.spacemacs.d/")
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/private/"))
+  (add-to-list 'load-path (expand-file-name "~/.spacemacs.d/public/"))
 
 
   ;;  ;; Homebrew MU 1.8.8 install path
@@ -663,12 +735,7 @@ layers configuration. You are free to put any user code."
    (quote
     (powerline org-mime parent-mode projectile flx smartparens iedit anzu evil goto-chg undo-tree f dash hydra s highlight sesman spinner pkg-info epl bind-key packed helm avy helm-core async popup yaml-mode xterm-color web-mode web-beautify tagedit smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder ranger pug-mode prodigy pbcopy parinfer osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro org-journal org-download org-dashboard multi-term ht alert log4e gntp mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode ledger-mode launchctl js2-refactor js2-mode js-doc htmlize helm-w3m w3m helm-gitignore helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-auctex company coffee-mode clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider seq queue clojure-mode auto-yasnippet yasnippet auto-dictionary auctex auto-complete organic-green-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu erlang elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(tool-bar-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 180 :width normal)))))
+
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -683,6 +750,7 @@ This function is called at the very end of Spacemacs initialization."
      ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
    '(blink-cursor-mode nil)
    '(column-number-mode t)
+   '(cua-mode t)
    '(erc-nick "sineer")
    '(erc-nickserv-alist
      '((freenode "Nickserv's nick!user@host: NickServ!NickServ@services."
@@ -720,71 +788,67 @@ This function is called at the very end of Spacemacs initialization."
    '(org-src-block-faces '(("emacs-lisp" (:background "#F0FFF0"))))
    '(package-selected-packages
      '(ace-jump-helm-line ace-link ace-window adaptive-wrap aggressive-indent alert
-                          anaconda-mode anzu async auctex auto-compile
-                          auto-complete auto-dictionary auto-highlight-symbol
-                          auto-yasnippet avy bind-key blacken bui cider
-                          cider-eval-sexp-fu clean-aindent-mode clj-refactor
-                          clojure-mode clojure-snippets code-cells coffee-mode
+                          anzu async auctex auto-compile auto-complete
+                          auto-dictionary auto-highlight-symbol auto-yasnippet avy
+                          bind-key cider cider-eval-sexp-fu clean-aindent-mode
+                          clj-refactor clojure-mode clojure-snippets coffee-mode
                           column-enforce-mode company company-auctex
-                          company-quickhelp company-statistics company-tern
-                          company-web concurrent ctable cython-mode dash
-                          dash-functional define-word diff-hl diminish docker
-                          docker-tramp dockerfile-mode dumb-jump edn
-                          elisp-slime-nav emmet-mode epc epl erc-hl-nicks
-                          erc-image erc-social-graph erc-terminal-notifier
-                          erc-view-log erc-yt erlang esh-help eshell-prompt-extras
-                          eshell-z eval-sexp-fu evil evil-anzu evil-args
-                          evil-ediff evil-escape evil-exchange evil-iedit-state
-                          evil-indent-plus evil-lisp-state evil-magit evil-matchit
-                          evil-mc evil-nerd-commenter evil-numbers
-                          evil-search-highlight-persist evil-surround evil-tutor
-                          evil-unimpaired evil-visual-mark-mode evil-visualstar
-                          exec-path-from-shell expand-region eyebrowse f
-                          fancy-battery fill-column-indicator flx flx-ido
-                          flyspell-correct flyspell-correct-helm fringe-helper
-                          fuzzy ggtags gh-md ghub git-commit git-gutter
-                          git-gutter+ git-gutter-fringe git-gutter-fringe+
-                          git-link git-messenger git-timemachine
-                          gitattributes-mode gitconfig-mode gitignore-mode gntp
-                          gnuplot golden-ratio google-translate goto-chg haml-mode
-                          helm helm-ag helm-c-yasnippet helm-company helm-core
-                          helm-cscope helm-css-scss helm-descbinds helm-flx
-                          helm-gitignore helm-make helm-mode-manager
-                          helm-projectile helm-pydoc helm-swoop helm-themes
+                          company-quickhelp company-shell company-statistics
+                          company-tern company-web dash dash-functional
+                          define-word diff-hl diminish docker docker-tramp
+                          dockerfile-mode dumb-jump edn elisp-slime-nav emmet-mode
+                          epl erc-hl-nicks erc-image erc-social-graph
+                          erc-terminal-notifier erc-view-log erc-yt erlang
+                          esh-help eshell-prompt-extras eshell-z eval-sexp-fu evil
+                          evil-anzu evil-args evil-ediff evil-escape evil-exchange
+                          evil-iedit-state evil-indent-plus evil-lisp-state
+                          evil-magit evil-matchit evil-mc evil-nerd-commenter
+                          evil-numbers evil-search-highlight-persist evil-surround
+                          evil-tutor evil-unimpaired evil-visual-mark-mode
+                          evil-visualstar exec-path-from-shell expand-region
+                          eyebrowse f fancy-battery fill-column-indicator
+                          fish-mode flx flx-ido flycheck-bashate flyspell-correct
+                          flyspell-correct-helm fringe-helper fuzzy ggtags gh-md
+                          ghub git-commit git-gutter git-gutter+ git-gutter-fringe
+                          git-gutter-fringe+ git-link git-messenger
+                          git-timemachine gitattributes-mode gitconfig-mode
+                          gitignore-mode gntp gnuplot golden-ratio
+                          google-translate goto-chg haml-mode helm helm-ag
+                          helm-c-yasnippet helm-company helm-core helm-css-scss
+                          helm-descbinds helm-flx helm-gitignore helm-make
+                          helm-mode-manager helm-projectile helm-swoop helm-themes
                           helm-w3m help-fns+ hide-comnt highlight
                           highlight-indentation highlight-numbers
                           highlight-parentheses hl-todo ht htmlize hungry-delete
-                          hydra iedit importmagic indent-guide inflections info+
-                          ivy js-doc js2-mode js2-refactor json-mode json-reformat
-                          json-snatcher launchctl ledger-mode less-css-mode
-                          let-alist link-hint linum-relative live-py-mode
-                          livid-mode load-env-vars log4e lorem-ipsum lsp-docker
-                          lsp-pyright macrostep magit magit-gitflow magit-popup
-                          markdown-mode markdown-toc mmm-mode move-text multi-term
-                          multiple-cursors neotree nose open-junk-file org-bullets
-                          org-category-capture org-dashboard org-download
-                          org-journal org-mime org-plus-contrib org-pomodoro
-                          org-present org-projectile organic-green-theme orgit
-                          osx-dictionary osx-trash packed paradox paredit
-                          parent-mode parinfer pbcopy pcre2el peg persp-mode
-                          pip-requirements pipenv pippel pkg-info poetry popup
-                          popwin pos-tip powerline prodigy projectile pug-mode
-                          py-isort pydoc pyenv-mode pylookup pytest pythonic
-                          pyvenv queue rainbow-delimiters ranger request
+                          hydra iedit indent-guide inflections info+
+                          insert-shebang js-doc js2-mode js2-refactor json-mode
+                          json-reformat json-snatcher launchctl ledger-mode
+                          less-css-mode let-alist link-hint linum-relative
+                          livid-mode log4e lorem-ipsum macrostep magit
+                          magit-gitflow magit-popup markdown-mode markdown-toc
+                          mmm-mode move-text multi-term multiple-cursors neotree
+                          open-junk-file org-bullets org-category-capture
+                          org-dashboard org-download org-journal org-mime
+                          org-plus-contrib org-pomodoro org-present org-projectile
+                          organic-green-theme orgit osx-dictionary osx-trash
+                          packed paradox paredit parent-mode parinfer pbcopy
+                          pcre2el peg persp-mode pkg-info popup popwin pos-tip
+                          powerline prodigy projectile pug-mode queue
+                          rainbow-delimiters ranger reformatter request
                           restart-emacs reveal-in-osx-finder s sass-mode scss-mode
-                          seq sesman shell-pop simple-httpd skewer-mode slim-mode
-                          smartparens smeargle spaceline sphinx-doc spinner
-                          tablist tagedit tern toc-org undo-tree use-package
-                          uuidgen vi-tilde-fringe volatile-highlights w3m
-                          web-beautify web-completion-data web-mode which-key
-                          winum with-editor ws-butler xcscope xterm-color
-                          yaml-mode yapfify yasnippet))
+                          seq sesman shell-pop shfmt simple-httpd skewer-mode
+                          slim-mode smartparens smeargle spaceline spinner tablist
+                          tagedit tern toc-org undo-tree use-package uuidgen
+                          vi-tilde-fringe volatile-highlights w3m web-beautify
+                          web-completion-data web-mode which-key winum with-editor
+                          ws-butler xterm-color yaml-mode yasnippet))
    '(paradox-github-token t)
    '(safe-local-variable-values
      '((cider-ns-refresh-after-fn . "development/go")
        (cider-ns-refresh-before-fn . "development/stop")
        (eval put-clojure-indent :require 0) (javascript-backend . tide)
        (javascript-backend . tern) (javascript-backend . lsp)))
+   '(show-paren-mode nil)
    '(tool-bar-mode nil)
    '(warning-suppress-log-types '((comp))))
   (custom-set-faces
@@ -792,6 +856,6 @@ This function is called at the very end of Spacemacs initialization."
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   '(default ((t (:family "Source Code Pro for Powerline" :foundry "nil" :slant normal :weight normal :height 180 :width normal))))
+   '(default ((t (:family "FiraMono Nerd Font Propo" :foundry "CTDB" :slant normal :weight regular :height 158 :width normal))))
    '(highlight-parentheses-highlight ((nil (:weight ultra-bold))) t))
   )

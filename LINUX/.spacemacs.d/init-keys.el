@@ -46,25 +46,25 @@
 ;;     (call-interactively (key-binding (this-command-keys)))))
 
 ;; UNDO/REDO
-(define-key evil-normal-state-map (kbd "C-z") 'undo-fu-only-undo)
-(define-key evil-insert-state-map (kbd "C-z") 'undo-fu-only-undo)
-(define-key evil-visual-state-map (kbd "C-z") 'undo-fu-only-undo)
-(define-key evil-hybrid-state-map (kbd "C-z") 'undo-fu-only-undo)
+(define-key evil-normal-state-map (kbd "C-z") 'undo-tree-undo)
+(define-key evil-insert-state-map (kbd "C-z") 'undo-tree-undo)
+(define-key evil-visual-state-map (kbd "C-z") 'undo-tree-undo)
+(define-key evil-hybrid-state-map (kbd "C-z") 'undo-tree-undo)
 
-(define-key evil-normal-state-map (kbd "C-S-z") 'undo-fu-only-redo)
-(define-key evil-insert-state-map (kbd "C-S-z") 'undo-fu-only-redo)
-(define-key evil-visual-state-map (kbd "C-S-z") 'undo-fu-only-redo)
-(define-key evil-hybrid-state-map (kbd "C-S-z") 'undo-fu-only-redo)
+(define-key evil-normal-state-map (kbd "C-S-z") 'undo-tree-redo)
+(define-key evil-insert-state-map (kbd "C-S-z") 'undo-tree-redo)
+(define-key evil-visual-state-map (kbd "C-S-z") 'undo-tree-redo)
+(define-key evil-hybrid-state-map (kbd "C-S-z") 'undo-tree-redo)
 
-(define-key evil-normal-state-map (kbd "M-z") 'undo-fu-only-undo)
-(define-key evil-insert-state-map (kbd "M-z") 'undo-fu-only-undo)
-(define-key evil-visual-state-map (kbd "M-z") 'undo-fu-only-undo)
-(define-key evil-hybrid-state-map (kbd "M-z") 'undo-fu-only-undo)
+(define-key evil-normal-state-map (kbd "M-z") 'undo-tree-undo)
+(define-key evil-insert-state-map (kbd "M-z") 'undo-tree-undo)
+(define-key evil-visual-state-map (kbd "M-z") 'undo-tree-undo)
+(define-key evil-hybrid-state-map (kbd "M-z") 'undo-tree-undo)
 
-(define-key evil-normal-state-map (kbd "M-Z") 'undo-fu-only-redo)
-(define-key evil-insert-state-map (kbd "M-Z") 'undo-fu-only-redo)
-(define-key evil-visual-state-map (kbd "M-Z") 'undo-fu-only-redo)
-(define-key evil-hybrid-state-map (kbd "M-Z") 'undo-fu-only-redo)
+(define-key evil-normal-state-map (kbd "M-Z") 'undo-tree-redo)
+(define-key evil-insert-state-map (kbd "M-Z") 'undo-tree-redo)
+(define-key evil-visual-state-map (kbd "M-Z") 'undo-tree-redo)
+(define-key evil-hybrid-state-map (kbd "M-Z") 'undo-tree-redo)
 
 
 
